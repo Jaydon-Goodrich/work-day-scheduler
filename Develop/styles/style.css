@@ -9,10 +9,9 @@ textarea{
   border: none;
   resize: none;
   color: #000000;
-  /* border-left: 1px solid black; */
+  border-left: 1px solid black;
   padding: 10px;
-  width: 100%;
-  height: 100%;
+  
 }
 
 .jumbotron {
@@ -72,6 +71,7 @@ textarea{
 .saveBtn i:hover {
   font-size: 20px;
   transition: all .3s ease-in-out;
+  color: black;
 }
 
 .fas {

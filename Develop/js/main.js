@@ -1,3 +1,6 @@
+// Array for storing tasks
+tasks = [];
+
 // Set the date in the header
 var now = moment();
 var formatedNow = now.format("dddd, MMMM Do");
@@ -41,50 +44,75 @@ var forHour17 = hour17.format("h A");
 $("#time5").text(forHour17);
 
 $(".task-group").on("click", function () {
+    var saveId = $(this).attr("id");
     var text = $(this)
         .text()
         .trim();
     var textInput = $("<textarea>")
         .val(text)
+        .addClass("col-10")
+        .attr("id", saveId);
     $(this).replaceWith(textInput);
-    textInput.trigger("focus");
+    checkTime();
 });
 
-$(".task-group").on("blur", "textarea", function(){
-    var taskP = $("<p>");
-
-    $(this).replaceWith(taskP);
+$(".saveBtn").on("click", function () {
+    var prevObj = $(this).prev();
+    var objId = prevObj.attr("id");
+    var newText = $("#" + objId).val();
+    var saveObj = {
+        id: objId,
+        text: newText
+    };
+    tasks.push(saveObj);
+    saveTasks();
 });
 
-var checkTime = function(){
+var checkTime = function () {
     var timeNow = parseInt(moment().format("H"));
     var timeOfDay = [9, 10, 11, 12, 1, 2, 3, 4, 5];
-    for(var i=0; i<timeOfDay.length; i++){
+    for (var i = 0; i < timeOfDay.length; i++) {
         var timeOf = timeOfDay[i];
         var time = parseInt($("#time" + timeOf).text());
-        if(time <= 5){
+        if (time <= 5) {
             time = time + 12;
         }
-        if(time > timeNow){
+        if (time > timeNow) {
             $("#task" + timeOf).addClass("future");
         }
-        else if(time === timeNow) {
+        else if (time === timeNow) {
             $("#task" + timeOf).addClass("present");
         }
-        else{
+        else {
             $("#task" + timeOf).addClass("past");
         }
     }
 }
-setInterval(function(){
+setInterval(function () {
     checkTime();
-}, (1000*60))
+}, (1000 * 60))
 
-var loadTasks = function(){
+var saveTasks = function () {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+    for(var i = 0; i < tasks.length; i++){
+    }
+
+}
+
+var loadTasks = function () {
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+
+    if (!tasks) {
+        tasks = [];
+    }
+    for(i = 0; i < tasks.length; i++){
+        $("#" + tasks[i].id).text(tasks[i].text);
+    }
 
 };
 
-var onPageStart = function(){
+var onPageStart = function () {
     checkTime();
     loadTasks();
 };
