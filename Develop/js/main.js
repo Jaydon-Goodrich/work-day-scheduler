@@ -64,8 +64,8 @@ $(".saveBtn").on("click", function () {
         id: objId,
         text: newText
     };
-    tasks.push(saveObj);
-    saveTasks();
+    checkTasks(saveObj);
+    // tasks.push(saveObj);
 });
 
 var checkTime = function () {
@@ -92,12 +92,27 @@ setInterval(function () {
     checkTime();
 }, (1000 * 60))
 
+var checkTasks = function (taskObj) {
+    if (tasks.length === 0) {
+        tasks.push(taskObj);
+    }
+    else {
+        for (var i = 0; i < tasks.length; i++) {
+            var arrId = tasks[i].id;
+            var objId = taskObj["id"];
+            if (arrId === objId) {
+                tasks.splice(i, 1);
+                tasks.push(taskObj);
+                saveTasks();
+                return;
+            }
+        }
+        tasks.push(taskObj);
+    }
+    saveTasks();
+}
 var saveTasks = function () {
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    tasks = JSON.parse(localStorage.getItem("tasks"));
-    for(var i = 0; i < tasks.length; i++){
-    }
-
 }
 
 var loadTasks = function () {
@@ -106,7 +121,7 @@ var loadTasks = function () {
     if (!tasks) {
         tasks = [];
     }
-    for(i = 0; i < tasks.length; i++){
+    for (i = 0; i < tasks.length; i++) {
         $("#" + tasks[i].id).text(tasks[i].text);
     }
 
