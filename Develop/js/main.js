@@ -43,6 +43,7 @@ var hour17 = moment().hour(17);
 var forHour17 = hour17.format("h A");
 $("#time5").text(forHour17);
 
+//Event handler for when the task group field is clicked on
 $(".task-group").on("click", function () {
     var saveId = $(this).attr("id");
     var text = $(this)
@@ -55,7 +56,7 @@ $(".task-group").on("click", function () {
     $(this).replaceWith(textInput);
     checkTime();
 });
-
+//Tasks the text that is entered and checks it
 $(".saveBtn").on("click", function () {
     var prevObj = $(this).prev();
     var objId = prevObj.attr("id");
@@ -68,6 +69,7 @@ $(".saveBtn").on("click", function () {
     // tasks.push(saveObj);
 });
 
+//Checks time and styles the divs depending on past, present, or future
 var checkTime = function () {
     var timeNow = parseInt(moment().format("H"));
     var timeOfDay = [9, 10, 11, 12, 1, 2, 3, 4, 5];
@@ -88,15 +90,18 @@ var checkTime = function () {
         }
     }
 }
+// Runs checkTime every minute updating real time
 setInterval(function () {
     checkTime();
 }, (1000 * 60))
-
+//Used to check if a task's id already exists in the array
 var checkTasks = function (taskObj) {
+    //if empty adds it to the array
     if (tasks.length === 0) {
         tasks.push(taskObj);
     }
     else {
+        // If already exists deletes the old one and add the new one
         for (var i = 0; i < tasks.length; i++) {
             var arrId = tasks[i].id;
             var objId = taskObj["id"];
@@ -107,14 +112,16 @@ var checkTasks = function (taskObj) {
                 return;
             }
         }
+        // if not in array adds it
         tasks.push(taskObj);
     }
     saveTasks();
 }
+// Save tasks array to localStorage
 var saveTasks = function () {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-
+//gets array from local storage and displays to the screen
 var loadTasks = function () {
     tasks = JSON.parse(localStorage.getItem("tasks"));
 
@@ -126,10 +133,10 @@ var loadTasks = function () {
     }
 
 };
-
+// runs checktime and loadtasks when page loads for the first time
 var onPageStart = function () {
     checkTime();
     loadTasks();
 };
-
+//function call once page loads
 onPageStart();
